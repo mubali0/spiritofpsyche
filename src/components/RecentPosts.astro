@@ -1,0 +1,26 @@
+---
+import { getCollection } from 'astro:content';
+
+// Fetch all blog posts
+const allPosts = await getCollection('blog');
+
+// Sort posts by `pubDate` (most recent first) and take the top 3
+const recentPosts = allPosts
+  .sort((a, b) => b.data.pubDate - a.data.pubDate)
+  .slice(0, 3);
+---
+<section class="p-6 bg-gray-100 rounded-lg shadow-md">
+  <h2 class="text-xl font-bold mb-4">Recent Posts</h2>
+  <ul class="space-y-4">
+    {recentPosts.map(post => (
+      <li class="border-b pb-2 last:border-none">
+        <a href={`/blog/${post.slug}/`} class="text-blue-600 hover:underline text-lg font-medium">
+          {post.data.title}
+        </a>
+        <p class="text-sm text-gray-500">
+          {new Date(post.data.pubDate).toLocaleDateString()} • {post.data.description}
+        </p>
+      </li>
+    ))}
+  </ul>
+</section>

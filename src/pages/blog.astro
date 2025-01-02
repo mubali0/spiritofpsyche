@@ -1,18 +1,25 @@
 ---
 import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
 
-const posts = await getCollection("posts");
+// Fetch all blog posts
+const allPosts = await getCollection('blog');
+
+// Sort posts by `pubDate` (most recent first)
+const sortedPosts = allPosts.sort((a, b) => new Date(b.data.pubDate) - new Date(a.data.pubDate));
 ---
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-</head>
-<body class="bg-gray-100 text-gray-900">
-   {posts}
-</body>
-</html>
+<Layout>
+    <h1 class="text-3xl font-bold mb-6">Blog</h1>
+    <ul class="space-y-4">
+        {sortedPosts.map(post => (
+            <li class="border-b pb-2 last:border-none">
+                <a href={`/blog/${post.slug}/`} class="text-blue-600 hover:underline text-lg font-medium">
+                    {post.data.title}
+                </a>
+                <p class="text-sm text-gray-500">
+                    {new Date(post.data.pubDate).toLocaleDateString()} • {post.data.description}
+                </p>
+            </li>
+        ))}
+    </ul>
+</Layout>

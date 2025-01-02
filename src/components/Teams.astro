@@ -1,0 +1,45 @@
+---
+import { getCollection } from 'astro:content';
+
+const teams = await getCollection('teams');
+---
+<section class="p-6 bg-gray-100 rounded-lg">
+    <h2 class="text-2xl font-bold mb-6">Our Team</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {teams.map(member => (
+        <div class="bg-white p-4 rounded-lg shadow">
+          <img
+            src={member.data.image.url}
+            alt={member.data.image.alt}
+            class="w-full h-48 object-cover rounded"
+          />
+          <h3 class="text-xl font-semibold mt-4">{member.data.name}</h3>
+          <p class="text-gray-500">{member.data.role}</p>
+          <p class="mt-2 text-gray-600">{member.data.bio}</p>
+          <div class="mt-4 flex space-x-4">
+            {member.data.socials.linkedin && (
+              <a href={member.data.socials.linkedin} target="_blank" class="text-blue-600 hover:underline">
+                LinkedIn
+              </a>
+            )}
+            {member.data.socials.twitter && (
+              <a href={member.data.socials.twitter} target="_blank" class="text-blue-600 hover:underline">
+                Twitter
+              </a>
+            )}
+            {member.data.socials.github && (
+              <a href={member.data.socials.github} target="_blank" class="text-blue-600 hover:underline">
+                GitHub
+              </a>
+            )}
+            {member.data.socials.dribbble && (
+              <a href={member.data.socials.dribbble} target="_blank" class="text-blue-600 hover:underline">
+                Dribbble
+              </a>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+  
