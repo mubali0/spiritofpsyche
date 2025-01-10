@@ -1,26 +1,34 @@
 ---
+import { getCollection } from "astro:content";
 
-import { getCollection } from 'astro:content';
-
-const services = await getCollection('service');
+const services = await getCollection("service");
 ---
 
-
-
 <section class="p-6 bg-gray-100 rounded-lg">
-    <h2 class="text-2xl font-bold mb-6">Our Services</h2>
-    <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      {services.map(service => (
+  <h2 class="text-2xl font-bold mb-6">Our Services</h2>
+  <p class="text-gray-600">
+    At Spirit of Psyche, we are dedicated to supporting mental wellness and
+    personal growth through a variety of professional services tailored to meet
+    individual and relationship needs. Our offerings include:
+  </p>
+  <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    {
+      services.map((service) => (
         <li class="p-4 bg-white rounded shadow">
-          <span class="text-4xl">{service.data.icon}</span>
+          <div class="w-full">
+            <img src={service.data.image} class="h-52 w-full object-cover" />
+          </div>
           <h3 class="text-xl font-semibold mt-2">{service.data.title}</h3>
           <p class="text-gray-600 mt-2">{service.data.description}</p>
-          <ul class="mt-4 space-y-1">
-            {service.data.features.map((feature: string) => (
-              <li class="text-sm text-gray-500">- {feature}</li>
-            ))}
-          </ul>
         </li>
-      ))}
-    </ul>
+      ))
+    }
+  </ul>
+  <p>
+    Each of our services is led by experienced professionals committed to
+    providing empathetic, effective, and confidential care. Whether you’re
+    seeking guidance, healing, or education, Spirit of Psyche is here to support
+    you on your journey to mental well-being.
+    <p>Take the first step today—because your mental health matters.</p>
+  </p>
 </section>

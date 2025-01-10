@@ -19,8 +19,7 @@ const service = defineCollection({
     schema: z.object({
       title: z.string(),
       description: z.string(),
-      icon: z.string(),
-      features: z.array(z.string()),
+      image: z.string(),
     }),
   });
 

@@ -1,0 +1,74 @@
+---
+// filepath: /d:/Projects/Astro/learning/src/pages/blog/[slug].astro
+import { getCollection, getEntryBySlug } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+// Get the slug from the URL
+const { slug } = Astro.params;
+
+// Fetch the blog post by slug
+const post = await getEntryBySlug('blog', slug);
+const { Content } = await post.render();
+
+// Fetch all blog posts to find similar content
+const allPosts = await getCollection('blog');
+
+// Filter out the current post and find posts with similar tags
+const similarPosts = allPosts.filter(p => p.slug !== slug && p.data.tags.some(tag => post.data.tags.includes(tag)));
+
+// Export getStaticPaths function
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map(post => ({
+    params: { slug: post.slug },
+  }));
+}
+---
+
+<Layout>
+    <article class="prose lg:prose-xl mx-auto">
+        <h1 class="text-4xl font-bold mb-4">{post.data.title}</h1>
+        <p class="text-sm text-gray-500 mb-4">
+            {new Date(post.data.pubDate).toLocaleDateString()}
+        </p>
+        <img src={post.data.image?.url} alt={post.data.image?.alt} class="w-full h-96 object-cover mb-4" />
+        <div class="flex flex-wrap gap-2 mb-4">
+            {post.data.tags.map(tag => (
+                <span class="bg-blue-100 text-blue-600 text-xs font-semibold px-2 py-1 rounded">
+                    {tag}
+                </span>
+            ))}
+        </div>
+        <div class="markdown-content">
+            <Content />
+        </div>
+    </article>
+
+    <section class="mt-12">
+        <h2 class="text-2xl font-bold mb-4">Similar Posts</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {similarPosts.map(similarPost => (
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <img src={similarPost.data.image?.url} alt={similarPost.data.image?.alt} class="w-full h-48 object-cover" />
+                    <div class="p-4">
+                        <h3 class="text-xl font-bold mb-2">
+                            <a href={`/blog/${similarPost.slug}/`} class="text-blue-600 hover:underline">
+                                {similarPost.data.title}
+                            </a>
+                        </h3>
+                        <div class="flex flex-wrap gap-2 mb-2">
+                            {similarPost.data.tags.map(tag => (
+                                <span class="bg-blue-100 text-blue-600 text-xs font-semibold px-2 py-1 rounded">
+                                    {tag}
+                                </span>
+                            ))}
+                        </div>
+                        <p class="text-gray-700">
+                            {similarPost.data.description}
+                        </p>
+                    </div>
+                </div>
+            ))}
+        </div>
+    </section>
+</Layout>
