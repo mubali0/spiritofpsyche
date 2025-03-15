@@ -7,6 +7,8 @@ import mdx from '@astrojs/mdx';
 import sanity from '@sanity/astro';
 import react from '@astrojs/react';
 
+import cloudflare from '@astrojs/cloudflare';
+
 // https://astro.build/config
 export default defineConfig({
   integrations: [tailwind(), mdx(), sanity({
@@ -17,5 +19,9 @@ export default defineConfig({
     apiVersion: '2023-05-03', // Add API version
     // Remove studioConfig as it's not a valid property
   }), react()],
-  output: 'server', // Change to server-side rendering
+
+  // Change to server-side rendering
+  output: 'server',
+
+  adapter: cloudflare()
 });
