@@ -1,30 +1,163 @@
 ---
+import { createClient } from '@sanity/client'
 import Teams from '../components/Teams.astro';
 import Layout from '../layouts/Layout.astro';
+
+// Initialize Sanity client
+const client = createClient({
+  projectId: 'scegyxg7',
+  dataset: 'production',
+  apiVersion: '2023-05-03',
+  useCdn: true
+})
+
+// Fetch about page data from Sanity
+const aboutData = await client.fetch(`*[_type == "aboutPage"][0]`)
+
+// Default values if no data is found
+const title = aboutData?.title || "About Us"
+const introduction = aboutData?.introduction || "At Spirit of Psyche, we are dedicated to empowering individuals on their journey to emotional well-being and personal growth."
+const leadershipInfo = aboutData?.leadershipInfo || "Our team is led by Mubasher Ali, a certified counseling professional and psychology researcher with extensive experience."
+const missionStatement = aboutData?.missionStatement || "We believe that mental well-being is the foundation for a fulfilling and meaningful life."
+const whyChooseUs = aboutData?.whyChooseUs || {
+  title: "Why Choose Us?",
+  points: [
+    {
+      title: "Expertise You Can Trust",
+      description: "Our services are rooted in evidence-based practices and guided by years of research and experience."
+    },
+    {
+      title: "Holistic Approach",
+      description: "We address your unique needs, blending psychological science with personalized strategies for lasting change."
+    },
+    {
+      title: "Empowering Growth",
+      description: "Beyond addressing challenges, we aim to inspire and empower you to lead a more balanced and purposeful life."
+    }
+  ],
+  conclusion: "At Spirit of Psyche, we are here to walk with you every step of the way. Let's work together to create a brighter, more mindful future.",
+  callToAction: "Discover more about our services or get in touch to start your journey today."
+}
+const teamSectionTitle = aboutData?.teamSectionTitle || "Our Team"
 ---
 
 <Layout>
-  <h1 class="text-4xl font-bold mb-6">About Us</h1>
-  <p class="text-lg text-gray-600 mb-6">
-    At Spirit of Psyche, we are dedicated to empowering individuals on their journey to emotional well-being and personal growth. Founded with a passion for psychology and a commitment to making a positive impact, our mission is to provide evidence-based counseling services, educational resources, and guidance to help you navigate life’s challenges.
-  </p>
-  <p class="text-lg text-gray-600 mb-6">
-    Our team is led by Mubasher Ali, a certified counseling professional and psychology researcher with extensive experience in fostering emotional resilience, resolving complex neurotic challenges, and promoting personal and relational growth. Using a compassionate and client-centered approach, we focus on creating tailored solutions that empower you to overcome obstacles and unlock your potential.
-  </p>
-  <p class="text-lg text-gray-600 mb-6">
-    We believe that mental well-being is the foundation for a fulfilling and meaningful life. Whether you're seeking support for stress management, relationship issues, or personal development, we offer a safe, supportive space for self-discovery and transformation.
-  </p>
-  <p class="text-lg text-gray-600 mb-6">
-    <h1 class="text-2xl font-bold mb-6">Why Choose Us?</h1>
-    <ul class="text-lg text-gray-600 mb-6">
-        <li><strong>Expertise You Can Trust:</strong> Our services are rooted in evidence-based practices and guided by years of research and experience.</li>
-        <li><strong>Holistic Approach:</strong> We address your unique needs, blending psychological science with personalized strategies for lasting change.</li>
-        <li><strong>Empowering Growth:</strong> Beyond addressing challenges, we aim to inspire and empower you to lead a more balanced and purposeful life.</li>
-    </ul>
-    <p>At Spirit of Psyche, we are here to walk with you every step of the way. Let’s work together to create a brighter, more mindful future.</p>
-    <p><a href="#services" class="btn">Discover more about our services</a> or <a href="#contact" class="btn">get in touch</a> to start your journey today.</p>
-  </p>
-  
-  <h2 class="text-2xl font-bold mt-6 mb-6">Our Team</h2>
-	<Teams />
+  <div class="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <!-- Hero section -->
+    <div class="text-center mb-16 animate-fade-in">
+      <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6 relative inline-block">
+        {title}
+        <span class="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-32 h-1.5 bg-indigo-600 rounded-full"></span>
+      </h1>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto mt-8">
+        {introduction}
+      </p>
+    </div>
+    
+    <!-- Leadership section -->
+    <div class="mb-16 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-2xl p-8 md:p-12 shadow-sm animate-fade-in-delay">
+      <div class="flex flex-col md:flex-row items-center gap-8">
+        <div class="md:w-1/3">
+          <div class="relative w-48 h-48 mx-auto">
+            <div class="absolute inset-0 rounded-full bg-indigo-200 opacity-50 animate-pulse"></div>
+            <div class="absolute inset-2 rounded-full bg-white flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div class="md:w-2/3">
+          <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4">Leadership</h2>
+          <p class="text-lg text-gray-700">
+            {leadershipInfo}
+          </p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Mission statement -->
+    <div class="mb-16 animate-fade-in-delay-2">
+      <div class="text-center max-w-4xl mx-auto">
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-6">Our Mission</h2>
+        <p class="text-xl text-gray-700 italic">
+          "{missionStatement}"
+        </p>
+      </div>
+    </div>
+    
+    <!-- Why Choose Us section -->
+    <div class="mb-16 animate-fade-in-delay-3">
+      <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-8 text-center">{whyChooseUs.title}</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {whyChooseUs.points && whyChooseUs.points.map((point: { title: string; description: string }, index: number) => (
+          <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 group" style={`animation-delay: ${index * 150 + 600}ms`}>
+            <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mb-4 group-hover:bg-indigo-200 transition-colors duration-300">
+              <span class="text-2xl font-bold text-indigo-600">{index + 1}</span>
+            </div>
+            <h3 class="text-xl font-bold mb-3 text-gray-900 group-hover:text-indigo-600 transition-colors duration-200">
+              {point.title}
+            </h3>
+            <p class="text-gray-600">
+              {point.description}
+            </p>
+          </div>
+        ))}
+      </div>
+      
+      <div class="mt-12 text-center">
+        <p class="text-lg text-gray-700 mb-4">{whyChooseUs.conclusion}</p>
+        <p class="text-lg">
+          <a href="/services" class="text-indigo-600 hover:text-indigo-800 font-medium mr-2">Discover more about our services</a> 
+          or 
+          <a href="/contact" class="text-indigo-600 hover:text-indigo-800 font-medium ml-2">get in touch</a> 
+          to start your journey today.
+        </p>
+      </div>
+    </div>
+    
+    <!-- Team section -->
+    <div class="animate-fade-in-delay-4">
+      <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-8 text-center mx-auto relative inline-block left-1/2 -translate-x-1/2">
+        {teamSectionTitle}
+        <span class="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-indigo-600 rounded-full"></span>
+      </h2>
+      <Teams />
+    </div>
+  </div>
 </Layout>
+
+<style>
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .animate-fade-in {
+    animation: fadeIn 0.8s ease-out forwards;
+  }
+  
+  .animate-fade-in-delay {
+    opacity: 0;
+    animation: fadeIn 0.8s ease-out forwards;
+    animation-delay: 0.2s;
+  }
+  
+  .animate-fade-in-delay-2 {
+    opacity: 0;
+    animation: fadeIn 0.8s ease-out forwards;
+    animation-delay: 0.4s;
+  }
+  
+  .animate-fade-in-delay-3 {
+    opacity: 0;
+    animation: fadeIn 0.8s ease-out forwards;
+    animation-delay: 0.6s;
+  }
+  
+  .animate-fade-in-delay-4 {
+    opacity: 0;
+    animation: fadeIn 0.8s ease-out forwards;
+    animation-delay: 0.8s;
+  }
+</style>

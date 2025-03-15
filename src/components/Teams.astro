@@ -1,41 +1,75 @@
 ---
-import { getCollection } from 'astro:content';
+import { createClient } from '@sanity/client'
+import imageUrlBuilder from '@sanity/image-url'
 
-const teams = await getCollection('teams');
+// Initialize Sanity client
+const client = createClient({
+  projectId: 'scegyxg7',
+  dataset: 'production',
+  apiVersion: '2023-05-03',
+  useCdn: true
+})
+
+// Initialize image URL builder
+const builder = imageUrlBuilder(client)
+function urlFor(source: any) {
+  return builder.image(source)
+}
+
+// Fetch team members from Sanity, sorted by order field
+const teams = await client.fetch(`
+  *[_type == "team"] | order(order asc) {
+    _id,
+    name,
+    position,
+    bio,
+    image,
+    socialLinks
+  }
+`)
+
+// Define the type for social links
+type SocialLink = {
+  platform: string;
+  url: string;
+  customTitle?: string;
+}
+
+// Define the type for team members
+type TeamMember = {
+  _id: string;
+  name: string;
+  position: string;
+  bio: string;
+  image: any;
+  socialLinks?: SocialLink[];
+}
 ---
 <section class="p-6 bg-gray-100 rounded-lg">
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      {teams.map(member => (
+      {teams.map((member: TeamMember) => (
         <div class="bg-white p-4 rounded-lg shadow">
-          <img
-            src={member.data.image.url}
-            alt={member.data.image.alt}
-            class="w-full h-48 object-cover rounded"
-          />
-          <h3 class="text-xl font-semibold mt-4">{member.data.name}</h3>
-          <p class="text-gray-500">{member.data.role}</p>
-          <p class="mt-2 text-gray-600">{member.data.bio}</p>
+          {member.image && (
+            <img
+              src={urlFor(member.image).width(400).height(300).url()}
+              alt={member.name}
+              class="w-full h-48 object-cover rounded"
+            />
+          )}
+          <h3 class="text-xl font-semibold mt-4">{member.name}</h3>
+          <p class="text-gray-500">{member.position}</p>
+          <p class="mt-2 text-gray-600">{member.bio}</p>
           <div class="mt-4 flex space-x-4">
-            {member.data.socials.linkedin && (
-              <a href={member.data.socials.linkedin} target="_blank" class="text-blue-600 hover:underline">
-                LinkedIn
+            {member.socialLinks && member.socialLinks.map(social => (
+              <a 
+                href={social.url} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                class="text-blue-600 hover:underline"
+              >
+                {social.platform === 'other' ? social.customTitle : social.platform}
               </a>
-            )}
-            {member.data.socials.twitter && (
-              <a href={member.data.socials.twitter} target="_blank" class="text-blue-600 hover:underline">
-                Twitter
-              </a>
-            )}
-            {member.data.socials.github && (
-              <a href={member.data.socials.github} target="_blank" class="text-blue-600 hover:underline">
-                GitHub
-              </a>
-            )}
-            {member.data.socials.dribbble && (
-              <a href={member.data.socials.dribbble} target="_blank" class="text-blue-600 hover:underline">
-                Dribbble
-              </a>
-            )}
+            ))}
           </div>
         </div>
       ))}
