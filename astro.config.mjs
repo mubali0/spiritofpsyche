@@ -11,6 +11,9 @@ import cloudflare from '@astrojs/cloudflare';
 
 // https://astro.build/config
 export default defineConfig({
+  output: 'server',
+  adapter: cloudflare(),
+  site: 'https://spiritofpsyche.com/',
   integrations: [tailwind(), mdx(), sanity({
     projectId: 'scegyxg7',
     dataset: 'production',
@@ -19,9 +22,4 @@ export default defineConfig({
     apiVersion: '2023-05-03', // Add API version
     // Remove studioConfig as it's not a valid property
   }), react()],
-
-  // Change to server-side rendering
-  output: 'server',
-
-  adapter: cloudflare()
 });
