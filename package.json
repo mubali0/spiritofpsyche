@@ -13,6 +13,7 @@
     "@astrojs/markdown-remark": "^6.3.0",
     "@astrojs/mdx": "^4.2.0",
     "@astrojs/react": "^4.2.1",
+    "@astrojs/sitemap": "^3.3.0",
     "@astrojs/tailwind": "^6.0.0",
     "@portabletext/react": "^3.2.1",
     "@sanity/astro": "^3.2.6",
