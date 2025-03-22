@@ -1,0 +1,11 @@
+# robots.txt for spiritofpsyche.com
+
+User-agent: *
+Allow: /
+
+# Disallow Sanity Studio paths
+Disallow: /studio/
+Disallow: /studio/*
+
+# Sitemap location
+Sitemap: https://spiritofpsyche.com/sitemap.xml
