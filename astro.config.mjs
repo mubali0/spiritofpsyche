@@ -9,6 +9,8 @@ import react from '@astrojs/react';
 
 import cloudflare from '@astrojs/cloudflare';
 
+import sitemap from '@astrojs/sitemap';
+
 // https://astro.build/config
 export default defineConfig({
   output: 'server',
@@ -21,7 +23,7 @@ export default defineConfig({
     studioBasePath: '/studio',
     apiVersion: '2023-05-03', // Add API version
     // Remove studioConfig as it's not a valid property
-  }), react()],
+  }), react(), sitemap()],
   vite: {
     resolve: {
       // Use react-dom/server.edge instead of react-dom/server.browser for React 19.
